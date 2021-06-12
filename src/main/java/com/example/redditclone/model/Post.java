@@ -1,21 +1,16 @@
 package com.example.redditclone.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.lang.Nullable;
-
 import javax.persistence.*;
-
 import java.time.Instant;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
-@Entity
+@Entity(name = "post")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
