@@ -3,6 +3,7 @@ package com.example.redditclone.model;
 
 import lombok.*;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "subreddit")
+@Entity
 @Builder
 public class Subreddit {
 

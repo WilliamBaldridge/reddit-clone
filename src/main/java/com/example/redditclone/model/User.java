@@ -3,6 +3,9 @@ package com.example.redditclone.model;
 
 import lombok.*;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -10,8 +13,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "user")
-@Builder
+@Entity
 public class User {
 
     @Id

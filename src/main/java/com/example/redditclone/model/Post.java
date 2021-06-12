@@ -4,13 +4,14 @@ package com.example.redditclone.model;
 import lombok.*;
 import org.springframework.lang.Nullable;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
-@Entity(name = "post")
+@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
