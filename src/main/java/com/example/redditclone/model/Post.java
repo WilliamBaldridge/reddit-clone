@@ -9,6 +9,7 @@ import java.time.Instant;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @Data
 @Entity
@@ -18,7 +19,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = SEQUENCE)
     private Long postId;
 
     @NotBlank(message = "Post name cannot be empty or Null")
