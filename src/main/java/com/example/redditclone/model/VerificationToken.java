@@ -2,6 +2,7 @@ package com.example.redditclone.model;
 
 
 import lombok.*;
+
 import javax.persistence.*;
 import java.time.Instant;
 
