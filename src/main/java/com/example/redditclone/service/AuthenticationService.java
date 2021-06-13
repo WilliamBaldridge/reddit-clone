@@ -41,7 +41,7 @@ public class AuthenticationService {
         userRepo.save(user);
 
         String token = generateVerificationToken(user);
-        mailService.sendMail(new NotificationEmail("Please activate your account", user.getEmail(), "Thank you for signing up to Reddit Clone, please click on the below url to activate your account: " + "http://localhost:8080/api/auth/accountVerification/" + token ));
+        mailService.sendMail(new NotificationEmail("Please activate your account", user.getEmail(), "Thank you for signing up to Reddit Clone, please click on the below url to activate your account: " + "http://localhost:8080/api/auth/accountVerification/" + token));
     }
 
     private String generateVerificationToken(User user) {
