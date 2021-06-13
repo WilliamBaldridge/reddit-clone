@@ -1,6 +1,5 @@
 package com.example.redditclone.service;
 
-
 import com.example.redditclone.dto.AuthenticationResponse;
 import com.example.redditclone.dto.LoginRequest;
 import com.example.redditclone.dto.RegisterRequest;
@@ -12,6 +11,7 @@ import com.example.redditclone.repository.UserRepo;
 import com.example.redditclone.repository.VerificationTokenRepo;
 import com.example.redditclone.security.JwtProvider;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,19 +20,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.time.Instant.now;
+
 @Service
 @AllArgsConstructor
-
+@Slf4j
 public class AuthenticationService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
     private final VerificationTokenRepo verificationTokenRepo;
     private final MailService mailService;
+    private final MailContentBuilder mailContentBuilder;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
 
@@ -43,10 +45,11 @@ public class AuthenticationService {
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setCreated(Instant.now());
+        user.setCreated(now());
         user.setEnabled(false);
 
         userRepo.save(user);
+        log.info("User Registered Successfully, Sending Authentication Email");
 
         String token = generateVerificationToken(user);
         mailService.sendMail(new NotificationEmail("Please activate your account", user.getEmail(), "Thank you for signing up to Reddit Clone, please click on the below url to activate your account: " + "http://localhost:8080/api/auth/accountVerification/" + token));
@@ -63,11 +66,14 @@ public class AuthenticationService {
         return token;
     }
 
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
     public void verifyAccount(String token) {
 
-        Optional<VerificationToken> verificationToken = verificationTokenRepo.findByToken(token);
-        verificationToken.orElseThrow(() -> new SpringRedditException("Invalid token"));
-        fetchUserAndEnable(verificationToken.get());
+        Optional<VerificationToken> verificationTokenOptional = verificationTokenRepo.findByToken(token);
+        fetchUserAndEnable(verificationTokenOptional.orElseThrow(() -> new SpringRedditException("Invalid Token")));
     }
 
     @Transactional
@@ -83,7 +89,8 @@ public class AuthenticationService {
 
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
-        String token = jwtProvider.generateToken(authenticate);
-        return new AuthenticationResponse(token, loginRequest.getUsername());
+        String authenticationToken = jwtProvider.generateToken(authenticate);
+        return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
     }
+
 }

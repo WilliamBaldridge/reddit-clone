@@ -9,6 +9,7 @@ import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +19,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Subreddit {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = SEQUENCE)
     private Long id;
 
     @NotBlank(message = "Community name is required")
